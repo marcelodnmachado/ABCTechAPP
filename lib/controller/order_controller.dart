@@ -101,4 +101,12 @@ class OrderController extends GetxController with StateMixin<bool> {
     screenState.value = OrderState.creating;
     change(true, status: RxStatus.success());
   }
+
+  
+  String? operatorIdValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Campo obrigatório'; 
+    }
+    return null; 
+  }
 }

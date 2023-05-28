@@ -15,6 +15,13 @@ class OrderPage extends GetView<OrderController> {
             ListTile(title: Text(assistList[index].title)));
   }
 
+  String? operatorIdValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Campo obrigatório'; 
+    }
+    return null;
+  }
+
   @override
   Widget renderScreen(BuildContext context) {
     return SingleChildScrollView(
@@ -33,6 +40,7 @@ class OrderPage extends GetView<OrderController> {
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(labelText: "Código do prestador"),
+            validator: controller.operatorIdValidator,
           ),
           Row(
             children: [
@@ -61,7 +69,20 @@ class OrderPage extends GetView<OrderController> {
             children: [
               Expanded(
                   child: ElevatedButton(
-                onPressed: controller.finishStartOrder,
+                  onPressed: () {
+                    if (controller.selectedAssists.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: Text("Não tem serviço selecionado"),
+                          );
+                        },
+                      );
+                      return;
+                    }
+                    controller.finishStartOrder();
+                  },
                 child: Obx(() {
                   if (controller.screenState.value == OrderState.creating) {
                     return const Text("Iniciar");
